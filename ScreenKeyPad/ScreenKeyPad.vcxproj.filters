@@ -27,13 +27,13 @@
     <ClCompile Include="ScreenKeyPad.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MainDlg.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="KeyWindow.cpp">
       <Filter>KeyWindow</Filter>
     </ClCompile>
     <ClCompile Include="KeyDefine.cpp">
+      <Filter>KeyWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="MainDlg.cpp">
       <Filter>KeyWindow</Filter>
     </ClCompile>
   </ItemGroup>
@@ -46,9 +46,6 @@
     </ClInclude>
     <ClInclude Include="KeyWindow.h">
       <Filter>KeyWindow</Filter>
-    </ClInclude>
-    <ClInclude Include="MainDlg.h">
-      <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="KeyDefine.h">
       <Filter>KeyWindow</Filter>
@@ -118,6 +115,9 @@
     </ClInclude>
     <ClInclude Include="WTL\atlwinx.h">
       <Filter>WTL</Filter>
+    </ClInclude>
+    <ClInclude Include="MainDlg.h">
+      <Filter>KeyWindow</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

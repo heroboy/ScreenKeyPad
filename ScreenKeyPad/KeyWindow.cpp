@@ -18,7 +18,11 @@ BOOL KeyWindow::Create(UINT key)
 	if ( this->IsWindow() ) return FALSE;
 	_SetupKey(key);
 	CRect rcDefaultSize(0, 0, 100, 100);
-	BOOL ret = __super::Create(NULL, rcDefaultSize, m_DisplayText, WS_VISIBLE | WS_POPUP, WS_EX_TOPMOST | WS_EX_NOACTIVATE) != NULL;
+	BOOL ret = __super::Create(NULL, rcDefaultSize, m_DisplayText, WS_POPUP, WS_EX_TOPMOST | WS_EX_NOACTIVATE) != NULL;
+	if ( ret )
+	{
+		this->SetWindowPos(0, 0,0,0,0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE | SWP_NOZORDER | SWP_SHOWWINDOW);
+	}
 	return ret;
 }
 
@@ -317,3 +321,15 @@ void KeyWindow::_TriggerKeyUp()
 		Invalidate();
 	}
 }
+
+void KeyWindow::SetKey(UINT vk)
+{
+	if ( vk != m_VirtualKey )
+	{
+		this->_TriggerKeyUp();
+		this->m_VirtualKey = vk;
+		_SetupKey(vk);
+		Invalidate();
+	}
+}
+

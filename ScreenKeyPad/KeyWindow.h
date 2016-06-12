@@ -29,6 +29,7 @@ public:
 	BOOL Create(UINT key = 'A');
 	void Close();
 	void SetMoveResizeMode(BOOL val);
+	void SetKey(UINT vk);
 
 	void OnPaint(CDCHandle dc);
 	UINT OnNcHitTest(CPoint point);
@@ -39,4 +40,6 @@ public:
 
 	void _TriggerKeyDown();
 	void _TriggerKeyUp();
+
+	const WCHAR * GetWindowTitle() { return m_DisplayText; }
 };
