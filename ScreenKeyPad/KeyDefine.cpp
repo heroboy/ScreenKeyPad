@@ -4,9 +4,10 @@
 struct _Vk_To_String
 {
 	WORD key;
+	const WCHAR * origin_str;
 	const WCHAR * str;
 };
-#define DEFINE_VK(key,str) {key,str},
+#define DEFINE_VK(key,str) {key,L#key,str},
 static _Vk_To_String _default_mappings[] = {
 	DEFINE_VK(VK_NUMPAD0,L"0")
 	DEFINE_VK(VK_NUMPAD1,L"1")
