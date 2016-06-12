@@ -66,14 +66,14 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>D:\lib\wtl\Include;$(IncludePath)</IncludePath>
+    <IncludePath>WTL;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>D:\lib\wtl\Include;$(IncludePath)</IncludePath>
+    <IncludePath>WTL;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -216,6 +216,28 @@
     <ClInclude Include="MainDlg.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="WTL\atlapp.h" />
+    <ClInclude Include="WTL\atlcrack.h" />
+    <ClInclude Include="WTL\atlctrls.h" />
+    <ClInclude Include="WTL\atlctrlw.h" />
+    <ClInclude Include="WTL\atlctrlx.h" />
+    <ClInclude Include="WTL\atlddx.h" />
+    <ClInclude Include="WTL\atldlgs.h" />
+    <ClInclude Include="WTL\atldwm.h" />
+    <ClInclude Include="WTL\atlfind.h" />
+    <ClInclude Include="WTL\atlframe.h" />
+    <ClInclude Include="WTL\atlgdi.h" />
+    <ClInclude Include="WTL\atlmisc.h" />
+    <ClInclude Include="WTL\atlprint.h" />
+    <ClInclude Include="WTL\atlres.h" />
+    <ClInclude Include="WTL\atlresce.h" />
+    <ClInclude Include="WTL\atlribbon.h" />
+    <ClInclude Include="WTL\atlscrl.h" />
+    <ClInclude Include="WTL\atlsplit.h" />
+    <ClInclude Include="WTL\atltheme.h" />
+    <ClInclude Include="WTL\atluser.h" />
+    <ClInclude Include="WTL\atlwince.h" />
+    <ClInclude Include="WTL\atlwinx.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ScreenKeyPad.rc" />
