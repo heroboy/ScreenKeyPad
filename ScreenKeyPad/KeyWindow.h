@@ -11,9 +11,11 @@ class KeyWindow :public CWindowImpl<KeyWindow>
 	BOOL m_IsSelected = FALSE;
 	Gdiplus::GraphicsPath m_CachedTextPath;
 	SnapTool m_SnapTool;
+	BYTE m_WindowAlpha = 0xff;
 	void _SetupKey(UINT key);
 	void _DrawText(Gdiplus::Graphics & g);
 	void _DrawMoveIndicator(Gdiplus::Graphics & g);
+	void _SetWindowAlpha(BYTE alpha);
 public:
 	DECLARE_WND_CLASS_EX(NULL, CS_VREDRAW | CS_HREDRAW, WHITE_BRUSH)
 

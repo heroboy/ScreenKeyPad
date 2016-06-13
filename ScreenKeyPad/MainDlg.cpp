@@ -106,6 +106,87 @@ void CMainDlg::_RefreshCurrentSelected()
 	}
 }
 
+void CMainDlg::_ShowNotifyIcon()
+{
+	NOTIFYICONDATA data;
+	ZeroMemory(&data, sizeof(data));
+	data.cbSize = sizeof(data);
+	data.hWnd = m_hWnd;
+	data.uID = (UINT)m_hWnd;
+	data.uFlags = NIF_MESSAGE | NIF_ICON | NIF_TIP;
+	data.uCallbackMessage = WM_NOTIFY_ICON_MESSAGE;
+	data.hIcon = GetIcon();
+	data.uVersion = 4;
+	wcsncpy_s(data.szTip, L"Screen Key Pad", sizeof(data.szTip));
+	Shell_NotifyIcon(NIM_ADD, &data);
+	Shell_NotifyIcon(NIM_SETVERSION, &data);
+}
+
+void CMainDlg::_HideNotifyIcon()
+{
+	NOTIFYICONDATA data;
+	ZeroMemory(&data, sizeof(data));
+	data.cbSize = sizeof(data);
+	data.hWnd = m_hWnd;
+	data.uID = (UINT)m_hWnd;
+	data.uFlags = 0;
+	Shell_NotifyIcon(NIM_DELETE, &data);
+}
+
+void CMainDlg::_Show()
+{
+	ShowWindow(SW_SHOW);
+	_HideNotifyIcon();
+	this->_RefreshCurrentSelected();
+}
+
+void CMainDlg::_Hide()
+{
+	ShowWindow(SW_HIDE);
+	_ShowNotifyIcon();
+	for ( auto p : m_AllKeyWindows )
+	{
+		p->SetSelected(FALSE);
+	}
+	_ExitMoveMode();
+}
+
+LRESULT CMainDlg::OnNotifyIconMessage(UINT, WPARAM wParam, LPARAM lParam, BOOL &)
+{
+	switch ( LOWORD(lParam) )
+	{
+		case WM_LBUTTONDBLCLK:
+			this->_Show();
+			break;
+		case WM_CONTEXTMENU:
+		{
+			CMenu menu;
+			menu.CreatePopupMenu();
+			menu.AppendMenuW(0, 10, L"Show");
+			menu.AppendMenuW(0, 11, L"Exit");
+			BOOL ret = menu.TrackPopupMenu(TPM_RETURNCMD|TPM_NONOTIFY, GET_X_LPARAM(wParam), GET_Y_LPARAM(wParam), m_hWnd, 0);
+			if ( ret == 10 )
+			{
+				this->_Show();
+			}
+			else if ( ret == 11 )
+			{
+				this->CloseDialog(IDOK);
+			}
+		}
+			break;
+	}
+	return 0;
+}
+
+void CMainDlg::OnClose()
+{
+	if ( IsWindowVisible() )
+	{
+		this->_Hide();
+	}
+}
+
 LRESULT CMainDlg::OnDestroy(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
 {
 	// unregister message filtering and idle updates
@@ -120,7 +201,7 @@ LRESULT CMainDlg::OnDestroy(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/,
 		delete p;
 	}
 	m_AllKeyWindows.clear();
-
+	_HideNotifyIcon();
 	return 0;
 }
 
@@ -140,6 +221,8 @@ LRESULT CMainDlg::OnCancel(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOO
 
 
 
+
+
 void CMainDlg::OnClickMoveMode(UINT uNotifyCode, int nID, CWindow wndCtl)
 {
 	CButton btn = wndCtl;
@@ -155,6 +238,17 @@ void CMainDlg::OnClickMoveMode(UINT uNotifyCode, int nID, CWindow wndCtl)
 		btn.SetCheck(BST_CHECKED);
 		m_MoveMode = TRUE;
 	}
+	for ( auto p : m_AllKeyWindows )
+	{
+		p->SetMoveResizeMode(m_MoveMode);
+	}
+}
+
+void CMainDlg::_ExitMoveMode()
+{
+	CButton btn = GetDlgItem(IDC_MOVE_MODE);
+	btn.SetCheck(BST_UNCHECKED);
+	m_MoveMode = FALSE;
 	for ( auto p : m_AllKeyWindows )
 	{
 		p->SetMoveResizeMode(m_MoveMode);

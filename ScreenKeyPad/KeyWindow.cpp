@@ -21,7 +21,7 @@ BOOL KeyWindow::Create(UINT key)
 	BOOL ret = __super::Create(NULL, rcDefaultSize, m_DisplayText, WS_POPUP, WS_EX_TOPMOST | WS_EX_NOACTIVATE) != NULL;
 	if ( ret )
 	{
-		this->SetWindowPos(0, 0,0,0,0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE | SWP_NOZORDER | SWP_SHOWWINDOW);
+		this->SetWindowPos(0, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE | SWP_NOZORDER | SWP_SHOWWINDOW);
 	}
 	return ret;
 }
@@ -47,7 +47,7 @@ void KeyWindow::OnPaint(CDCHandle)
 
 	if ( m_IsSelected )
 	{
-		Gdiplus::Pen pen(Gdiplus::Color::Yellow,5);
+		Gdiplus::Pen pen(Gdiplus::Color::Yellow, 5);
 		g.DrawRectangle(&pen, 0, 0, rcClient.Width(), rcClient.Height());
 	}
 }
@@ -295,6 +295,7 @@ void KeyWindow::SetMoveResizeMode(BOOL val)
 	{
 		this->_TriggerKeyUp();
 	}
+	_SetWindowAlpha(val ? 0xff : m_WindowAlpha);
 	Invalidate();
 }
 
@@ -372,4 +373,17 @@ void KeyWindow::OnEnterSizeMove()
 void KeyWindow::OnExitSizeMove()
 {
 	m_SnapTool.ExitSizeMove();
+}
+
+void KeyWindow::_SetWindowAlpha(BYTE alpha)
+{
+	if ( alpha == 0xff )
+	{
+		ModifyStyleEx(WS_EX_LAYERED, 0);
+	}
+	else
+	{
+		ModifyStyleEx(0, WS_EX_LAYERED);
+		SetLayeredWindowAttributes(m_hWnd, 0, alpha, LWA_ALPHA);
+	}
 }

@@ -7,6 +7,7 @@
 #include "KeyWindow.h"
 #include <vector>
 #include "resource.h"
+#define WM_NOTIFY_ICON_MESSAGE (WM_USER+1)
 class KeyWindow;
 class CMainDlg : public CDialogImpl<CMainDlg>, public CUpdateUI<CMainDlg>,
 		public CMessageFilter, public CIdleHandler
@@ -18,6 +19,12 @@ class CMainDlg : public CDialogImpl<CMainDlg>, public CUpdateUI<CMainDlg>,
 
 	CComboBoxEx m_keyWindowList;
 	CComboBoxEx m_keyList;
+
+	void _ShowNotifyIcon();
+	void _HideNotifyIcon();
+	void _Show();
+	void _Hide();
+	void _ExitMoveMode();
 public:
 	static CMainDlg * instance;
 	std::vector<KeyWindow*> m_AllKeyWindows;
@@ -33,7 +40,8 @@ public:
 	BEGIN_MSG_MAP(CMainDlg)
 		MESSAGE_HANDLER(WM_INITDIALOG, OnInitDialog)
 		MESSAGE_HANDLER(WM_DESTROY, OnDestroy)
-
+		MESSAGE_HANDLER(WM_NOTIFY_ICON_MESSAGE,OnNotifyIconMessage)
+		MSG_WM_CLOSE(OnClose)
 		COMMAND_ID_HANDLER(IDOK, OnOK)
 		COMMAND_ID_HANDLER(IDCANCEL, OnCancel)
 		COMMAND_HANDLER_EX(IDC_MOVE_MODE,BN_CLICKED,OnClickMoveMode)
@@ -48,8 +56,8 @@ public:
 	LRESULT OnDestroy(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	LRESULT OnOK(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
 	LRESULT OnCancel(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
-
-
+	LRESULT OnNotifyIconMessage(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
+	void OnClose();
 	void OnClickMoveMode(UINT uNotifyCode, int nID, CWindow wndCtl);
 	void CloseDialog(int nVal);
 
