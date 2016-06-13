@@ -1,5 +1,6 @@
 #pragma once
-
+#include "SnapTool.h"
+#include "MainDlg.h"
 class KeyWindow :public CWindowImpl<KeyWindow>
 {
 	CString m_DisplayText;
@@ -7,7 +8,9 @@ class KeyWindow :public CWindowImpl<KeyWindow>
 	BOOL m_MoveResizeMode = FALSE;
 	BOOL m_IsKeyDown = FALSE;
 	BOOL m_RecalcTextPath = TRUE;
+	BOOL m_IsSelected = FALSE;
 	Gdiplus::GraphicsPath m_CachedTextPath;
+	SnapTool m_SnapTool;
 	void _SetupKey(UINT key);
 	void _DrawText(Gdiplus::Graphics & g);
 	void _DrawMoveIndicator(Gdiplus::Graphics & g);
@@ -21,7 +24,11 @@ public:
 		MSG_WM_LBUTTONDOWN(OnLButtonDown)
 		MSG_WM_LBUTTONUP(OnLButtonUp)
 		MSG_WM_SIZE(OnSize)
-	END_MSG_MAP()
+		MSG_WM_ENTERSIZEMOVE(OnEnterSizeMove)
+		MSG_WM_EXITSIZEMOVE(OnExitSizeMove)
+		MSG_WM_MOVING(OnMoving)
+		MSG_WM_SIZING(OnSizing)
+		END_MSG_MAP()
 
 	KeyWindow();
 	~KeyWindow();
@@ -29,7 +36,6 @@ public:
 	BOOL Create(UINT key = 'A');
 	void Close();
 	void SetMoveResizeMode(BOOL val);
-	void SetKey(UINT vk);
 
 	void OnPaint(CDCHandle dc);
 	UINT OnNcHitTest(CPoint point);
@@ -42,4 +48,18 @@ public:
 	void _TriggerKeyUp();
 
 	const WCHAR * GetWindowTitle() { return m_DisplayText; }
+	UINT GetKey() { return m_VirtualKey; }
+	void SetKey(UINT key);
+	void SetSelected(BOOL val)
+	{
+		if ( val != m_IsSelected )
+		{
+			m_IsSelected = val;
+			Invalidate();
+		}
+	}
+	void OnMoving(UINT fwSide, LPRECT pRect);
+	void OnSizing(UINT fwSide, LPRECT pRect);
+	void OnEnterSizeMove();
+	void OnExitSizeMove();
 };

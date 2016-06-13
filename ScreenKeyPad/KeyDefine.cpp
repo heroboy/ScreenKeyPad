@@ -82,3 +82,15 @@ const WCHAR * KeyToString(UINT vk)
 
 	return str;
 }
+
+void FillKnownVirtualKey(std::vector<UINT>& keys)
+{
+	for ( UINT key = 'A'; key <= 'Z'; ++key )
+	{
+		keys.push_back(key);
+	}
+	for ( auto p : _default_mappings )
+	{
+		keys.push_back(p.key);
+	}
+}

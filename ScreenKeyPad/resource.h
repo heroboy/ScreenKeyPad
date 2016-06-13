@@ -7,10 +7,10 @@
 #define IDC_BUTTON1                     1000
 #define IDC_MOVE_MODE                   1000
 #define IDC_ADD                         1002
-#define IDC_KEY_LIST                    1004
 #define IDC_REMOVE                      1005
-#define IDC_COMBOBOXEX2                 1008
 #define IDC_KEY_WINDOW_LIST             1008
+#define IDC_KEY_WINDOW_LIST2            1009
+#define IDC_KEY_LIST                    1009
 
 // Next default values for new objects
 // 

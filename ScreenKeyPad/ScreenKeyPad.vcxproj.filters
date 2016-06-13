@@ -36,6 +36,9 @@
     <ClCompile Include="MainDlg.cpp">
       <Filter>KeyWindow</Filter>
     </ClCompile>
+    <ClCompile Include="SnapTool.cpp">
+      <Filter>KeyWindow</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -117,6 +120,9 @@
       <Filter>WTL</Filter>
     </ClInclude>
     <ClInclude Include="MainDlg.h">
+      <Filter>KeyWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="SnapTool.h">
       <Filter>KeyWindow</Filter>
     </ClInclude>
   </ItemGroup>

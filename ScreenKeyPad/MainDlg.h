@@ -7,16 +7,21 @@
 #include "KeyWindow.h"
 #include <vector>
 #include "resource.h"
+class KeyWindow;
 class CMainDlg : public CDialogImpl<CMainDlg>, public CUpdateUI<CMainDlg>,
 		public CMessageFilter, public CIdleHandler
 {
-	std::vector<KeyWindow*> m_AllKeyWindows;
+	
 	int m_CurrentSelected = -1;
 	BOOL m_MoveMode = FALSE;
 	void _RefreshCurrentSelected();
 
 	CComboBoxEx m_keyWindowList;
+	CComboBoxEx m_keyList;
 public:
+	static CMainDlg * instance;
+	std::vector<KeyWindow*> m_AllKeyWindows;
+
 	enum { IDD = IDD_MAINDLG };
 
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
@@ -35,6 +40,8 @@ public:
 		NOTIFY_HANDLER(IDC_KEY_WINDOW_LIST, CBEN_GETDISPINFO, OnCbenGetdispinfoKeyWindowList)
 		COMMAND_HANDLER(IDC_REMOVE, BN_CLICKED, OnBnClickedRemove)
 		COMMAND_HANDLER(IDC_ADD, BN_CLICKED, OnBnClickedAdd)
+		COMMAND_HANDLER(IDC_KEY_LIST, CBN_SELCHANGE, OnCbnSelchangeKeyList)
+		COMMAND_HANDLER(IDC_KEY_WINDOW_LIST, CBN_SELCHANGE, OnCbnSelchangeKeyWindowList)
 	END_MSG_MAP()
 
 	LRESULT OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
@@ -51,4 +58,6 @@ public:
 	LRESULT OnCbenGetdispinfoKeyWindowList(int /*idCtrl*/, LPNMHDR pNMHDR, BOOL& /*bHandled*/);
 	LRESULT OnBnClickedRemove(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
 	LRESULT OnBnClickedAdd(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
+	LRESULT OnCbnSelchangeKeyList(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
+	LRESULT OnCbnSelchangeKeyWindowList(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
 };

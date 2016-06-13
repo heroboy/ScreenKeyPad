@@ -44,6 +44,12 @@ void KeyWindow::OnPaint(CDCHandle)
 	g.Clear(Gdiplus::Color::White);
 	_DrawText(g);
 	_DrawMoveIndicator(g);
+
+	if ( m_IsSelected )
+	{
+		Gdiplus::Pen pen(Gdiplus::Color::Yellow,5);
+		g.DrawRectangle(&pen, 0, 0, rcClient.Width(), rcClient.Height());
+	}
 }
 
 UINT KeyWindow::OnNcHitTest(CPoint point)
@@ -329,7 +335,41 @@ void KeyWindow::SetKey(UINT vk)
 		this->_TriggerKeyUp();
 		this->m_VirtualKey = vk;
 		_SetupKey(vk);
+		m_RecalcTextPath = true;
 		Invalidate();
 	}
 }
 
+void KeyWindow::OnMoving(UINT fwSide, LPRECT pRect)
+{
+	m_SnapTool.OnMoving(pRect);
+}
+
+void KeyWindow::OnSizing(UINT fwSide, LPRECT pRect)
+{
+	m_SnapTool.OnSizing(fwSide, pRect);
+}
+
+void KeyWindow::OnEnterSizeMove()
+{
+	m_SnapTool.EnterSizeMove(m_hWnd);
+
+	m_SnapTool.m_LeftEdges.push_back(0);
+	m_SnapTool.m_RightEdges.push_back(0);
+	m_SnapTool.m_TopEdges.push_back(0);
+	m_SnapTool.m_BottomEdges.push_back(0);
+	for ( auto * window : CMainDlg::instance->m_AllKeyWindows )
+	{
+		if ( window != this )
+		{
+			RECT rect;
+			window->GetWindowRect(&rect);
+			m_SnapTool.AddSnapRect(rect);
+		}
+	}
+}
+
+void KeyWindow::OnExitSizeMove()
+{
+	m_SnapTool.ExitSizeMove();
+}
