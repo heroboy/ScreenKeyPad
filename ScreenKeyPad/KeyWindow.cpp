@@ -341,6 +341,15 @@ void KeyWindow::SetKey(UINT vk)
 	}
 }
 
+void KeyWindow::SetAlpha(BYTE alpha)
+{
+	if ( alpha != m_WindowAlpha )
+	{
+		m_WindowAlpha = alpha;
+		_SetWindowAlpha(m_MoveResizeMode ? 0xff : m_WindowAlpha);
+	}
+}
+
 void KeyWindow::OnMoving(UINT fwSide, LPRECT pRect)
 {
 	m_SnapTool.OnMoving(pRect);
@@ -373,6 +382,81 @@ void KeyWindow::OnEnterSizeMove()
 void KeyWindow::OnExitSizeMove()
 {
 	m_SnapTool.ExitSizeMove();
+}
+
+void KeyWindow::OnContextMenu(CWindow wnd, CPoint point)
+{
+	const UINT IDM_KEY_START = 0x1000;
+	const UINT IDM_KEY_END = 0x2000;
+	const UINT IDM_ALPHA_0 = 0x2001;
+	CMenu ctxMenu;
+	CMenuHandle keyMenu;
+	CMenuHandle alphaMenu;
+	ctxMenu.CreatePopupMenu();
+	keyMenu.CreatePopupMenu();
+
+	//setup keyMenu
+	auto AddKeySubMenu = [&](LPCTSTR name, const std::initializer_list<decltype(VK_ACCEPT)>& keys) {
+		CMenuHandle mm;
+		mm.CreatePopupMenu();
+		for ( auto key : keys )
+		{
+			mm.AppendMenuW(0, IDM_KEY_START + (UINT)key, KeyToString((UINT)key));
+		}
+		keyMenu.AppendMenuW(0, mm, name);
+	};
+	AddKeySubMenu(L"A-Z", { 'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z' });
+	AddKeySubMenu(L"F1-F12", { VK_F1,VK_F2,VK_F3,VK_F4,VK_F5,VK_F6,VK_F7,VK_F8,VK_F9,VK_F10,VK_F11,VK_F12 });
+	AddKeySubMenu(L"Arrow", { VK_UP,VK_DOWN,VK_LEFT,VK_RIGHT });
+	AddKeySubMenu(L"Others", { VK_LCONTROL,VK_RCONTROL,VK_LMENU,VK_RMENU,VK_LSHIFT,VK_RSHIFT,VK_RETURN,VK_SPACE });
+	AddKeySubMenu(L"Mouse", { VK_LBUTTON,VK_MBUTTON,VK_RBUTTON });
+	//setup alpha menu
+	alphaMenu.CreatePopupMenu();
+	alphaMenu.AppendMenuW(0, IDM_ALPHA_0 + 0xff, L"100%");
+	alphaMenu.AppendMenuW(0, IDM_ALPHA_0 + 0xff * 9 / 10, L"90%");
+	alphaMenu.AppendMenuW(0, IDM_ALPHA_0 + 0xff * 8 / 10, L"80%");
+	alphaMenu.AppendMenuW(0, IDM_ALPHA_0 + 0xff * 7 / 10, L"70%");
+	alphaMenu.AppendMenuW(0, IDM_ALPHA_0 + 0xff * 6 / 10, L"60%");
+	alphaMenu.AppendMenuW(0, IDM_ALPHA_0 + 0xff * 5 / 10, L"50%");
+	alphaMenu.AppendMenuW(0, IDM_ALPHA_0 + 0xff * 4 / 10, L"40%");
+	alphaMenu.AppendMenuW(0, IDM_ALPHA_0 + 0xff * 3 / 10, L"30%");
+	alphaMenu.AppendMenuW(0, IDM_ALPHA_0 + 0xff * 2 / 10, L"20%");
+	alphaMenu.AppendMenuW(0, IDM_ALPHA_0 + 0xff * 1 / 10, L"10%");
+
+
+	ctxMenu.AppendMenuW(0, keyMenu, L"Key");
+	ctxMenu.AppendMenuW(0, alphaMenu, L"Transparent");
+	BOOL cmd = ctxMenu.TrackPopupMenu(TPM_RETURNCMD, point.x, point.y, wnd);
+	BOOL changed = FALSE;
+	if ( cmd >= IDM_KEY_START && cmd < IDM_KEY_END )
+	{
+		UINT key = cmd - IDM_KEY_START;
+		this->SetKey(key);
+		changed = TRUE;
+		
+	}
+	else if ( cmd >= IDM_ALPHA_0 && cmd <= IDM_ALPHA_0 + 0xff )
+	{
+		this->SetAlpha((BYTE)cmd - IDM_ALPHA_0);
+		changed = TRUE;
+	}
+	ctxMenu.DestroyMenu();
+
+	if ( changed ) CMainDlg::instance->OnKeyWindowSettingChanged(this);
+}
+
+void KeyWindow::OnNcLButtonDown(UINT nHitTest, CPoint point)
+{
+	CMainDlg::instance->OnKeyWindowClicked(this);
+	SetMsgHandled(FALSE);
+}
+
+void KeyWindow::OnNcRButtonUp(UINT nHitTest, CPoint point)
+{
+	if ( nHitTest == HTCAPTION )
+	{
+		this->OnContextMenu(*this, point);
+	}
 }
 
 void KeyWindow::_SetWindowAlpha(BYTE alpha)

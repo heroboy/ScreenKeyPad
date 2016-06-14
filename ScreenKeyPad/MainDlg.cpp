@@ -313,3 +313,38 @@ LRESULT CMainDlg::OnCbnSelchangeKeyWindowList(WORD /*wNotifyCode*/, WORD /*wID*/
 	this->_RefreshCurrentSelected();
 	return 0;
 }
+
+void CMainDlg::OnKeyWindowClicked(KeyWindow * window)
+{
+	if ( !IsWindowVisible() ) return;
+	for ( int i = 0; i < (int)m_AllKeyWindows.size(); ++i )
+	{
+		if ( m_AllKeyWindows[i] == window )
+		{
+			if ( m_CurrentSelected != i )
+			{
+				m_CurrentSelected = i;
+				_RefreshCurrentSelected();
+			}
+			break;
+		}
+	}
+}
+
+void CMainDlg::OnKeyWindowSettingChanged(KeyWindow * window)
+{
+	if ( !IsWindowVisible() ) return;
+	if ( window == GetSelectedKeyWindow() )
+	{
+		this->_RefreshCurrentSelected();
+	}
+}
+
+KeyWindow * CMainDlg::GetSelectedKeyWindow()
+{
+	if ( m_CurrentSelected >= 0 && m_CurrentSelected < (int)m_AllKeyWindows.size() )
+	{
+		return m_AllKeyWindows[m_CurrentSelected];
+	}
+	return nullptr;
+}

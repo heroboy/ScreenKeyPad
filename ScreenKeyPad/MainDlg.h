@@ -68,4 +68,9 @@ public:
 	LRESULT OnBnClickedAdd(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
 	LRESULT OnCbnSelchangeKeyList(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
 	LRESULT OnCbnSelchangeKeyWindowList(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
+
+	void OnKeyWindowClicked(KeyWindow * window);
+	void OnKeyWindowSettingChanged(KeyWindow * window);
+
+	KeyWindow * GetSelectedKeyWindow();
 };

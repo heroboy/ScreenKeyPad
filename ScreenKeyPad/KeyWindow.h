@@ -17,7 +17,7 @@ class KeyWindow :public CWindowImpl<KeyWindow>
 	void _DrawMoveIndicator(Gdiplus::Graphics & g);
 	void _SetWindowAlpha(BYTE alpha);
 public:
-	DECLARE_WND_CLASS_EX(NULL, CS_VREDRAW | CS_HREDRAW, WHITE_BRUSH)
+	DECLARE_WND_CLASS_EX(NULL, CS_VREDRAW | CS_HREDRAW, NULL_BRUSH)
 
 	BEGIN_MSG_MAP_EX(KeyWindow)
 		MSG_WM_PAINT(OnPaint)
@@ -25,12 +25,15 @@ public:
 		MSG_WM_GETMINMAXINFO(OnGetMinMaxInfo)
 		MSG_WM_LBUTTONDOWN(OnLButtonDown)
 		MSG_WM_LBUTTONUP(OnLButtonUp)
+		MSG_WM_NCLBUTTONDOWN(OnNcLButtonDown)
+		MSG_WM_NCRBUTTONUP(OnNcRButtonUp)
 		MSG_WM_SIZE(OnSize)
 		MSG_WM_ENTERSIZEMOVE(OnEnterSizeMove)
 		MSG_WM_EXITSIZEMOVE(OnExitSizeMove)
 		MSG_WM_MOVING(OnMoving)
 		MSG_WM_SIZING(OnSizing)
-		END_MSG_MAP()
+		MSG_WM_CONTEXTMENU(OnContextMenu)
+	END_MSG_MAP()
 
 	KeyWindow();
 	~KeyWindow();
@@ -57,11 +60,17 @@ public:
 		if ( val != m_IsSelected )
 		{
 			m_IsSelected = val;
-			Invalidate();
+			Invalidate(TRUE);
 		}
 	}
+	BYTE GetAlpha() { return m_WindowAlpha; }
+	void SetAlpha(BYTE alpha);
 	void OnMoving(UINT fwSide, LPRECT pRect);
 	void OnSizing(UINT fwSide, LPRECT pRect);
 	void OnEnterSizeMove();
 	void OnExitSizeMove();
+
+	void OnContextMenu(CWindow wnd, CPoint point);
+	void OnNcLButtonDown(UINT nHitTest, CPoint point);
+	void OnNcRButtonUp(UINT nHitTest, CPoint point);
 };
