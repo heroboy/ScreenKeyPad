@@ -112,7 +112,7 @@ void CMainDlg::_ShowNotifyIcon()
 	ZeroMemory(&data, sizeof(data));
 	data.cbSize = sizeof(data);
 	data.hWnd = m_hWnd;
-	data.uID = (UINT)m_hWnd;
+	data.uID = (UINT)(UINT_PTR)(m_hWnd);
 	data.uFlags = NIF_MESSAGE | NIF_ICON | NIF_TIP;
 	data.uCallbackMessage = WM_NOTIFY_ICON_MESSAGE;
 	data.hIcon = GetIcon();
@@ -128,7 +128,7 @@ void CMainDlg::_HideNotifyIcon()
 	ZeroMemory(&data, sizeof(data));
 	data.cbSize = sizeof(data);
 	data.hWnd = m_hWnd;
-	data.uID = (UINT)m_hWnd;
+	data.uID = (UINT)(UINT_PTR)m_hWnd;
 	data.uFlags = 0;
 	Shell_NotifyIcon(NIM_DELETE, &data);
 }
@@ -325,6 +325,10 @@ void CMainDlg::OnKeyWindowClicked(KeyWindow * window)
 			{
 				m_CurrentSelected = i;
 				_RefreshCurrentSelected();
+				for ( auto window : m_AllKeyWindows )
+				{
+					window->UpdateWindow();
+				}
 			}
 			break;
 		}

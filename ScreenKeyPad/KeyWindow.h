@@ -33,6 +33,7 @@ public:
 		MSG_WM_MOVING(OnMoving)
 		MSG_WM_SIZING(OnSizing)
 		MSG_WM_CONTEXTMENU(OnContextMenu)
+		MSG_WM_ERASEBKGND(OnEraseBkgnd)
 	END_MSG_MAP()
 
 	KeyWindow();
@@ -43,6 +44,7 @@ public:
 	void SetMoveResizeMode(BOOL val);
 
 	void OnPaint(CDCHandle dc);
+	BOOL OnEraseBkgnd(CDCHandle dc);
 	UINT OnNcHitTest(CPoint point);
 	void OnGetMinMaxInfo(LPMINMAXINFO lpMMI);
 	void OnLButtonDown(UINT nFlags, CPoint point);

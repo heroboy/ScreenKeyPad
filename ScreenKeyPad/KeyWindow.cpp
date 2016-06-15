@@ -37,7 +37,6 @@ void KeyWindow::OnPaint(CDCHandle)
 	CPaintDC dc(m_hWnd);
 	Gdiplus::Graphics g(dc.m_hDC);
 
-
 	CRect rcClient;
 	GetClientRect(&rcClient);
 
@@ -52,9 +51,14 @@ void KeyWindow::OnPaint(CDCHandle)
 	}
 }
 
+BOOL KeyWindow::OnEraseBkgnd(CDCHandle dc)
+{
+	return TRUE;
+}
+
 UINT KeyWindow::OnNcHitTest(CPoint point)
 {
-	if ( m_MoveResizeMode )
+	if ( m_MoveResizeMode)
 	{
 		this->ScreenToClient(&point);
 		CRect rcClient;
@@ -121,6 +125,7 @@ void KeyWindow::OnGetMinMaxInfo(LPMINMAXINFO lpMMI)
 
 void KeyWindow::OnLButtonDown(UINT nFlags, CPoint point)
 {
+	CMainDlg::instance->OnKeyWindowClicked(this);
 	if ( m_MoveResizeMode ) return;
 	this->_TriggerKeyDown();
 	this->SetCapture();
@@ -363,7 +368,6 @@ void KeyWindow::OnSizing(UINT fwSide, LPRECT pRect)
 void KeyWindow::OnEnterSizeMove()
 {
 	m_SnapTool.EnterSizeMove(m_hWnd);
-
 	m_SnapTool.m_LeftEdges.push_back(0);
 	m_SnapTool.m_RightEdges.push_back(0);
 	m_SnapTool.m_TopEdges.push_back(0);
