@@ -4,6 +4,7 @@
 class KeyWindow :public CWindowImpl<KeyWindow>
 {
 	CString m_DisplayText;
+	float m_DpiScale = 1.0f;
 	UINT m_VirtualKey = 'A';
 	BOOL m_MoveResizeMode = FALSE;
 	BOOL m_IsKeyDown = FALSE;

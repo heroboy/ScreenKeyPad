@@ -8,11 +8,15 @@
 #include <vector>
 #include "resource.h"
 #define WM_NOTIFY_ICON_MESSAGE (WM_USER+1)
+extern float g_DpiScale;
+#define SCALE_INT(x) (int)((float)(x) * g_DpiScale)
+#define SCALE_FLOAT(x) ((x)*g_DpiScale)
+
 class KeyWindow;
 class CMainDlg : public CDialogImpl<CMainDlg>, public CUpdateUI<CMainDlg>,
-		public CMessageFilter, public CIdleHandler
+	public CMessageFilter, public CIdleHandler
 {
-	
+
 	int m_CurrentSelected = -1;
 	BOOL m_MoveMode = FALSE;
 	void _RefreshCurrentSelected();
@@ -40,11 +44,11 @@ public:
 	BEGIN_MSG_MAP(CMainDlg)
 		MESSAGE_HANDLER(WM_INITDIALOG, OnInitDialog)
 		MESSAGE_HANDLER(WM_DESTROY, OnDestroy)
-		MESSAGE_HANDLER(WM_NOTIFY_ICON_MESSAGE,OnNotifyIconMessage)
+		MESSAGE_HANDLER(WM_NOTIFY_ICON_MESSAGE, OnNotifyIconMessage)
 		MSG_WM_CLOSE(OnClose)
 		COMMAND_ID_HANDLER(IDOK, OnOK)
 		COMMAND_ID_HANDLER(IDCANCEL, OnCancel)
-		COMMAND_HANDLER_EX(IDC_MOVE_MODE,BN_CLICKED,OnClickMoveMode)
+		COMMAND_HANDLER_EX(IDC_MOVE_MODE, BN_CLICKED, OnClickMoveMode)
 		NOTIFY_HANDLER(IDC_KEY_WINDOW_LIST, CBEN_GETDISPINFO, OnCbenGetdispinfoKeyWindowList)
 		COMMAND_HANDLER(IDC_REMOVE, BN_CLICKED, OnBnClickedRemove)
 		COMMAND_HANDLER(IDC_ADD, BN_CLICKED, OnBnClickedAdd)

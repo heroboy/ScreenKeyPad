@@ -1,7 +1,8 @@
 #include "stdafx.h"
 #include "KeyWindow.h"
 #include "KeyDefine.h"
-#define RESIZE_EDGE 15
+#define RESIZE_EDGE_RAW 15
+#define RESIZE_EDGE SCALE_INT(RESIZE_EDGE_RAW)
 
 KeyWindow::KeyWindow()
 {
@@ -17,7 +18,7 @@ BOOL KeyWindow::Create(UINT key)
 {
 	if ( this->IsWindow() ) return FALSE;
 	_SetupKey(key);
-	CRect rcDefaultSize(0, 0, 100, 100);
+	CRect rcDefaultSize(0, 0, SCALE_INT(100), SCALE_INT(100));
 	BOOL ret = __super::Create(NULL, rcDefaultSize, m_DisplayText, WS_POPUP, WS_EX_TOPMOST | WS_EX_NOACTIVATE) != NULL;
 	if ( ret )
 	{
@@ -46,7 +47,7 @@ void KeyWindow::OnPaint(CDCHandle)
 
 	if ( m_IsSelected )
 	{
-		Gdiplus::Pen pen(Gdiplus::Color::Yellow, 5);
+		Gdiplus::Pen pen(Gdiplus::Color::Yellow, SCALE_INT(5));
 		g.DrawRectangle(&pen, 0, 0, rcClient.Width(), rcClient.Height());
 	}
 }
@@ -145,6 +146,7 @@ void KeyWindow::OnSize(UINT nType, CSize size)
 	m_RecalcTextPath = TRUE;
 	Invalidate();
 }
+
 
 void KeyWindow::_DrawText(Gdiplus::Graphics& g)
 {

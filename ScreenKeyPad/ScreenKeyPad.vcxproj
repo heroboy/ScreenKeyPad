@@ -141,6 +141,9 @@
       <TypeLibraryName>$(IntDir)/ScreenKeyPad.tlb</TypeLibraryName>
       <DllDataFileName />
     </Midl>
+    <Manifest>
+      <EnableDpiAwareness>true</EnableDpiAwareness>
+    </Manifest>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>

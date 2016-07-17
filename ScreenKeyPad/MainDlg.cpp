@@ -7,6 +7,8 @@
 
 #include "MainDlg.h"
 #include "KeyDefine.h"
+#include "ShellScalingAPI.h"
+float g_DpiScale = 1.0f;
 CMainDlg * CMainDlg::instance = nullptr;
 BOOL CMainDlg::PreTranslateMessage(MSG* pMsg)
 {
@@ -19,9 +21,17 @@ BOOL CMainDlg::OnIdle()
 	return FALSE;
 }
 
+
+
 LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
 {
+	
 	instance = this;
+	//get dpi scale
+	HMONITOR hMyMonitor = MonitorFromWindow(m_hWnd, MONITOR_DEFAULTTONEAREST);
+	UINT dpiX, dpiY;
+	GetDpiForMonitor(hMyMonitor, MDT_EFFECTIVE_DPI, &dpiX, &dpiY);
+	g_DpiScale = (float)dpiX / 96.0f;
 	// center the dialog on the screen
 	CenterWindow();
 
@@ -49,7 +59,7 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	}
 
 	AddKeyWindow();
-
+	
 	return TRUE;
 }
 
